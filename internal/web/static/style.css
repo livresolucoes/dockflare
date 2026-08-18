@@ -1,0 +1,167 @@
+:root {
+  --bg: #11161d;
+  --card: #182029;
+  --line: #2a3440;
+  --text: #e5eaf0;
+  --muted: #93a1b0;
+  --accent: #f38020; /* Cloudflare orange */
+  --ok: #3fb950;
+  --warn: #d29922;
+  --err: #f85149;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+/* The `hidden` attribute is how the login screen and the app are toggled, and
+   the browser implements it with a low-priority UA rule (`[hidden]{display:none}`).
+   Any author-level `display` — such as `.login { display: grid }` below — wins
+   over it, which would leave a "hidden" element on screen. Restate it with
+   !important so an element marked hidden is always actually hidden. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  padding: 0 1rem 4rem;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .9em; }
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1.5rem 0 .5rem;
+}
+
+h1 { font-size: 1.35rem; margin: 0; }
+h1::before { content: "▲ "; color: var(--accent); }
+h2 { font-size: .95rem; margin: 0 0 .75rem; letter-spacing: .02em; text-transform: uppercase; color: var(--muted); }
+
+.header-actions { display: flex; align-items: center; gap: .75rem; }
+
+.card {
+  max-width: 60rem;
+  margin: 0 auto 1rem;
+  padding: 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.hint { margin: 0 0 1rem; color: var(--muted); font-size: .875rem; }
+
+/* ---- login ---- */
+.login { display: grid; place-items: center; min-height: 80vh; }
+.login .card { width: min(24rem, 100%); }
+.login h1 { margin-bottom: 1.25rem; }
+.login label { display: block; margin-bottom: .35rem; font-size: .875rem; color: var(--muted); }
+.login input { width: 100%; margin-bottom: 1rem; }
+.login button { width: 100%; }
+
+/* ---- controls ---- */
+input, select, button {
+  font: inherit;
+  color: var(--text);
+  background: #0e1319;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: .5rem .6rem;
+}
+
+input:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+button { cursor: pointer; background: #202b36; border-color: #33414f; }
+button:hover:not(:disabled) { background: #26333f; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+button.primary { background: var(--accent); border-color: var(--accent); color: #1a1005; font-weight: 600; }
+button.primary:hover:not(:disabled) { filter: brightness(1.1); }
+button.ghost { background: transparent; }
+button.danger { background: transparent; border-color: transparent; color: var(--muted); padding: .35rem .5rem; }
+button.danger:hover { color: var(--err); background: transparent; }
+
+.row { display: flex; gap: .5rem; flex-wrap: wrap; }
+.row select { flex: 1 1 16rem; }
+
+.actions {
+  display: flex;
+  gap: .5rem;
+  justify-content: flex-end;
+  max-width: 60rem;
+  margin: 1.5rem auto;
+  flex-wrap: wrap;
+}
+
+/* ---- containers ---- */
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1rem; padding: 0; }
+.chips li {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .3rem .3rem .65rem;
+  background: #0e1319;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: .875rem;
+}
+.chips li.missing { border-color: var(--err); }
+.chips li.missing::before { content: "!"; color: var(--err); font-weight: 700; }
+
+/* ---- routes table ---- */
+.table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: .4rem .4rem .4rem 0; vertical-align: middle; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+td input[type="text"] { width: 100%; min-width: 11rem; }
+td input[type="number"] { width: 6rem; }
+td select { min-width: 6rem; }
+tbody tr + tr td { border-top: 1px solid var(--line); }
+
+/* ---- status ---- */
+.status { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1rem; margin: 0; font-size: .875rem; }
+.status dt { color: var(--muted); }
+.status dd { margin: 0; }
+.status dd.ok { color: var(--ok); }
+.status dd.bad { color: var(--err); }
+
+.pill { padding: .2rem .6rem; border-radius: 999px; font-size: .8rem; border: 1px solid var(--line); }
+.pill.ok { color: var(--ok); border-color: var(--ok); }
+.pill.bad { color: var(--err); border-color: var(--err); }
+
+/* ---- feedback ---- */
+.check { display: flex; gap: .6rem; align-items: flex-start; margin-bottom: 1rem; }
+.check input { margin-top: .2rem; }
+.check small { display: block; color: var(--muted); }
+
+.banner {
+  max-width: 60rem;
+  margin: 0 auto 1rem;
+  padding: .7rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  font-size: .9rem;
+}
+.banner.ok { border-color: var(--ok); color: var(--ok); }
+.banner.warn { border-color: var(--warn); color: var(--warn); }
+.banner.err { border-color: var(--err); color: var(--err); }
+
+.error { color: var(--err); font-size: .875rem; margin: 0; }
+
+.problems { border-color: var(--err); }
+.problems ul { margin: 0; padding-left: 1.1rem; }
+.problems li { margin-bottom: .4rem; font-size: .9rem; }
+
+@media (max-width: 640px) {
+  .actions { justify-content: stretch; }
+  .actions button { flex: 1; }
+}

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git --version)",
+      "Bash(go version *)",
+      "Bash(go env *)",
+      "Bash(go mod *)",
+      "Read(//usr/local/go/bin/**)",
+      "Read(//c/Program Files/Go/bin/**)",
+      "Bash(go build *)",
+      "Bash(where go *)",
+      "Read(//c/Users/RAFA-PC/go/**)",
+      "Bash(git *)"
+    ]
+  }
+}

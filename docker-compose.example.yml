@@ -1,0 +1,33 @@
+services:
+  dockflare:
+    build: .
+    image: dockflare:latest
+    container_name: dockflare
+    restart: unless-stopped
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}   # define em .env (ver abaixo)
+      # Só é necessário quando config.yml tem a seção `routes:`.
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN:-}
+      # Só é necessário com `web_ui.enabled: true`.
+      # Gere com: openssl rand -hex 32
+      - DOCKFLARE_UI_TOKEN=${DOCKFLARE_UI_TOKEN:-}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # O DIRETÓRIO, não o arquivo. Coloque seu config.yml dentro de ./config/.
+      #
+      # Montar o arquivo (./config.yml:/config/config.yml) tem dois problemas:
+      # a interface web não consegue gravar, e o hot reload não recebe os
+      # eventos de inotify das edições feitas no host.
+      #
+      # Sem `:ro`, porque a interface web grava aqui. Se você não usa a
+      # interface, pode acrescentar `:ro` de volta.
+      - ./config:/config
+
+    # Descomente APENAS se usar a interface web sem publicá-la pelo túnel.
+    # O bind em 127.0.0.1 é deliberado: a porta não fica acessível pela rede.
+    # Acesse com  ssh -L 8080:127.0.0.1:8080 usuario@servidor
+    # ports:
+    #   - "127.0.0.1:8080:8080"
+
+    # DockFlare auto-conecta às redes Docker dos containers listados.
+    # Nenhuma porta da sua aplicação precisa ser publicada.

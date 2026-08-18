@@ -1,0 +1,34 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go build/test artifacts
+*.test
+*.out
+coverage.html
+coverage.out
+
+# Runtime config (use config.example.yml as template)
+config.yml
+
+# cloudflared generated config
+/tmp/cloudflared-generated.yml
+cloudflared-generated.yml
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Secrets
+.env
+
+# OS
+.DS_Store
+Thumbs.db

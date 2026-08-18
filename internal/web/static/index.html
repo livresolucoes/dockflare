@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>DockFlare</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Login. Shown until the session cookie is accepted. -->
+<section id="login" class="login" hidden>
+  <form id="login-form" class="card">
+    <h1>DockFlare</h1>
+    <label for="token">Token de acesso</label>
+    <input id="token" type="password" autocomplete="current-password" required
+           placeholder="DOCKFLARE_UI_TOKEN">
+    <button type="submit">Entrar</button>
+    <p id="login-error" class="error" hidden></p>
+  </form>
+</section>
+
+<!-- Main application. -->
+<main id="app" hidden>
+  <header>
+    <h1>DockFlare</h1>
+    <div class="header-actions">
+      <span id="status-pill" class="pill">…</span>
+      <button id="logout" type="button" class="ghost">Sair</button>
+    </div>
+  </header>
+
+  <p id="banner" class="banner" hidden></p>
+
+  <section class="card">
+    <h2>Status</h2>
+    <dl id="status-list" class="status"></dl>
+  </section>
+
+  <section class="card">
+    <h2>Containers</h2>
+    <p class="hint">
+      Containers que o DockFlare torna alcançáveis pelo <code>cloudflared</code>.
+      Uma rota só funciona se o container dela estiver nesta lista.
+    </p>
+    <ul id="containers" class="chips"></ul>
+    <div class="row">
+      <select id="container-add"></select>
+      <button id="container-add-btn" type="button">Adicionar</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Rotas</h2>
+    <p class="hint">
+      <strong>Porta</strong> é a que o processo escuta <em>dentro</em> do container —
+      não a publicada no host.
+      <strong>Origem HTTPS</strong> só para containers que recusam HTTP puro.
+      <strong>Forçar HTTPS</strong> redireciona quem chega por <code>http://</code>.
+    </p>
+    <div class="table-wrap">
+      <table id="routes">
+        <thead>
+          <tr>
+            <th>Hostname</th>
+            <th>Container</th>
+            <th>Porta</th>
+            <th>Origem</th>
+            <th title="Redireciona http para https neste hostname">Forçar HTTPS</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="routes-body"></tbody>
+      </table>
+    </div>
+    <button id="route-add" type="button">Adicionar rota</button>
+  </section>
+
+  <section class="card">
+    <h2>Opções</h2>
+    <label class="check">
+      <input id="manage-dns" type="checkbox">
+      <span>
+        <strong>Gerenciar DNS</strong>
+        <small>Cria/atualiza o CNAME proxied de cada hostname. Requer permissão de DNS no API token.</small>
+      </span>
+    </label>
+    <dl id="webui-info" class="status"></dl>
+    <p class="hint">
+      As configurações da própria interface só mudam no <code>config.yml</code>, de propósito:
+      desligá-la por aqui te trancaria fora.
+    </p>
+  </section>
+
+  <div class="actions">
+    <button id="validate" type="button" class="ghost">Validar</button>
+    <button id="reload" type="button" class="ghost">Recarregar</button>
+    <button id="save" type="button" class="primary">Salvar e aplicar</button>
+  </div>
+
+  <section id="problems" class="card problems" hidden>
+    <h2>Problemas</h2>
+    <ul id="problems-list"></ul>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

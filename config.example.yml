@@ -1,0 +1,89 @@
+# DockFlare configuration — rename to config.yml
+#
+# TOKEN (obrigatório)
+# Defina via variável de ambiente — recomendado, mantém o segredo fora do repositório:
+#
+#   TUNNEL_TOKEN=eyJhIjoiYjk3Yz...   (em .env ou variável de shell)
+#
+# Alternativa: defina aqui no arquivo (não commitar em produção):
+# token: eyJhIjoiYjk3Yz...
+
+# CONTAINERS
+# Liste os containers Docker que o DockFlare deve tornar alcançáveis pelo cloudflared.
+
+containers:
+  - my_app
+  - grafana
+  - another_service
+
+# ROUTES (opcional)
+# Sem esta seção o DockFlare não mexe no ingress do tunnel: o roteamento
+# continua sendo definido no painel Zero Trust, exatamente como antes.
+#
+# Com esta seção, o config.yml passa a ser a fonte da verdade do roteamento e o
+# DockFlare mantém o ingress do tunnel sincronizado via API da Cloudflare.
+# Requer a variável de ambiente CLOUDFLARE_API_TOKEN.
+#
+#   hostname  — o domínio público (precisa estar em uma zona da sua conta)
+#   container — nome do container Docker de destino
+#   port      — a porta que o processo escuta DENTRO do container.
+#               NÃO é a porta publicada no host: o tráfego não sai da rede Docker.
+#
+# Campos opcionais por rota:
+#
+#   force_https   — redireciona http→https para ESTE hostname no edge da
+#                   Cloudflare. Outros hostnames do domínio ficam intocados.
+#                   Exige a permissão de zona `Single Redirect · Edit` no
+#                   API token (o dashboard chama de "Single Redirects" o que a
+#                   API chama de http_request_dynamic_redirect).
+#                   Obs.: https já funciona sem isso; o campo só adiciona o
+#                   redirect para quem chega por http.
+#
+#   origin_scheme — http (padrão) ou https. Descreve o que o CONTAINER fala,
+#                   não o que o navegador vê. Use https apenas para containers
+#                   que recusam HTTP puro (Vault, nginx só com ssl, .NET com
+#                   UseHttpsRedirection). Na dúvida, deixe http.
+#
+# Descomente o bloco INTEIRO, incluindo a linha `routes:`:
+#
+# routes:
+#   - hostname: my-app.example.com
+#     container: my_app
+#     port: 8080
+#     force_https: yes
+#
+#   - hostname: grafana.example.com
+#     container: grafana
+#     port: 3000
+#
+#   - hostname: vault.example.com
+#     container: vault
+#     port: 8200
+#     origin_scheme: https
+
+# MANAGE_DNS (opcional, padrão false)
+# Quando true, o DockFlare também cria/atualiza o CNAME proxied de cada
+# hostname apontando para o tunnel. Exige que o CLOUDFLARE_API_TOKEN tenha
+# permissão de DNS na zona.
+#
+# manage_dns: true
+
+# WEB_UI (opcional, padrão desligada)
+# Interface web para editar esta configuração pelo navegador, com reload sem
+# reiniciar o container.
+#
+# Desligada por padrão de propósito: ela reescreve o roteamento de produção.
+# Exige a variável de ambiente DOCKFLARE_UI_TOKEN com no mínimo 32 caracteres
+# (gere com `openssl rand -hex 32`) e que o DIRETÓRIO do config esteja montado
+# read-write no docker-compose.
+#
+# web_ui:
+#   enabled: true
+#   port: 8080              # dentro do container; padrão 8080
+#
+#   # SEGUNDO opt-in, separado. Sem hostname, a interface só é alcançável pela
+#   # porta — publique-a em 127.0.0.1 no compose e acesse por túnel SSH.
+#   #
+#   # Com hostname, ela é publicada pelo próprio tunnel e fica acessível pela
+#   # internet. Proteja com Cloudflare Access. Requer `routes:` configurado.
+#   # hostname: dockflare.example.com
